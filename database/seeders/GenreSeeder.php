@@ -17,7 +17,7 @@ class GenreSeeder extends Seeder
      */
     public function run()
     {
-        $genres = Genre::factory(8)->create();
+        $genres = Genre::factory(10)->create();
         foreach ($genres as $genre) {
             Artist::factory(15)->create([
                 'genre_id' => $genre->id,

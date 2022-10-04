@@ -38,7 +38,7 @@ class GenresController extends Controller
         $genre->save();
 
         return response()->json([
-            'success' => true,
+            // 'success' => true,
             'genre' => $genre,
         ]);
     }

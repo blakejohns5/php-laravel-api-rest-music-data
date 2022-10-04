@@ -21,7 +21,7 @@ class ArtistFactory extends Factory
         return [
             'name' => $this->faker->name,
             'bio' => $this->faker->realTextBetween($minNbChars = 20, $maxNbChars = 200, $indexSize = 2),
-            
+            'genre_id' => Genre::factory(),
         ];
     }
 }
