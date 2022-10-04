@@ -31,7 +31,7 @@ class ArtistsController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:50',
-            'bio' => 'sometimes|nullable|string',
+            'bio' => 'sometimes|nullable|string|min:20|max:200',
             'genre_id' => 'required|exists:genres,id'
         ]);
         $artist = new Artist();
@@ -72,7 +72,7 @@ class ArtistsController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:50',
-            'bio' => 'sometimes|nullable|string|min:20',
+            'bio' => 'sometimes|nullable|string|min:20|max:200',
             'genre_id' => 'required|exists:genres,id'
         ]);
 
