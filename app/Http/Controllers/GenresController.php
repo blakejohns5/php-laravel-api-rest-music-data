@@ -28,11 +28,17 @@ class GenresController extends Controller
      */
     public function store(Request $request)
     {
+        $validated = $request->validate([
+            'name' => 'required|string|max:30|unique:genres,name',
+        ]);
+
         $genre = new Genre();
-        $genre->name = $request->name;
+        // $genre->name = $request->name;
+        $genre->name = $validated['name'];
         $genre->save();
 
         return response()->json([
+            'success' => true,
             'genre' => $genre,
         ]);
     }
@@ -43,9 +49,15 @@ class GenresController extends Controller
      * @param  \App\Models\Genre  $genre
      * @return \Illuminate\Http\Response
      */
-    public function show(Genre $genre)
+    public function show(int $id)
     {
-        //
+        $genre = Genre::findOrFail($id);
+        $genre->load('artists');
+
+        return response()->json([
+            'id' => $id,
+            'genre' => $genre,
+        ]);
     }
 
     /**
@@ -57,7 +69,16 @@ class GenresController extends Controller
      */
     public function update(Request $request, Genre $genre)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|string|max:30|unique:genres,name',
+        ]);
+
+        $genre->name = $validated['name'];
+        $genre->save();
+        return response()->json([
+            'success' => true,
+            'genre' => $genre,
+        ]);
     }
 
     /**
@@ -68,6 +89,11 @@ class GenresController extends Controller
      */
     public function destroy(Genre $genre)
     {
-        //
+        $genre->delete();
+        
+        return response()->json([
+            'success' => true,
+            'genre' => $genre,
+        ]);
     }
 }

@@ -14,7 +14,11 @@ class ArtistsController extends Controller
      */
     public function index()
     {
-        //
+        $artists = Artist::orderBy('name')->get();
+        
+        return response()->json([
+            'artists' => $artists,
+        ]);
     }
 
     /**
@@ -25,10 +29,15 @@ class ArtistsController extends Controller
      */
     public function store(Request $request)
     {
+        $validated = $request->validate([
+            'name' => 'required|string|max:50',
+            'bio' => 'sometimes|nullable|string',
+            'genre_id' => 'required|exists:genres,id'
+        ]);
         $artist = new Artist();
-        $artist->name = $request->name;
-        $artist->bio = $request->bio || null;
-        $artist->genre_id = $request->genre_id;
+        $artist->name = $validated['name'];
+        $artist->bio = $validated['bio'] || null;
+        $artist->genre_id = $validated['genre_id'];
         $artist->save();
 
         return response()->json([
@@ -42,9 +51,14 @@ class ArtistsController extends Controller
      * @param  \App\Models\Artist  $artist
      * @return \Illuminate\Http\Response
      */
-    public function show(Artist $artist)
+    public function show(int $id)
     {
-        //
+        $artist = Artist::findOrFail($id);
+        
+        return response()->json([
+            'id' => $id,
+            'artist' => $artist,
+        ]);
     }
 
     /**
@@ -56,7 +70,21 @@ class ArtistsController extends Controller
      */
     public function update(Request $request, Artist $artist)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|string|max:50',
+            'bio' => 'sometimes|nullable|string|min:20',
+            'genre_id' => 'required|exists:genres,id'
+        ]);
+
+        $artist->name = $validated['name'];
+        $artist->bio = $validated['bio'] || null;
+        $artist->genre_id = $validated['genre_id'];
+        $artist->save();
+
+        return response()->json([
+            'success' => true,
+            'artist' => $artist,
+        ]);
     }
 
     /**
@@ -67,6 +95,11 @@ class ArtistsController extends Controller
      */
     public function destroy(Artist $artist)
     {
-        //
+        $artist->delete();
+        
+        return response()->json([
+            'success' => true,
+            'artist' => $artist,
+        ]);
     }
 }
